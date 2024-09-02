@@ -1,11 +1,23 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
 
   const [term, setTerm] = useState("")
+  const [advice, setAdvice] = useState("")
 
   const handleTermChange = (event) => setTerm(event.target.value);
+
+  const handleGetAdvice = () => {
+    fetch('https://api.adviceslip.com/advice')
+      .then(response => response.json())
+      .then(data => {
+        setAdvice(data.slip.advice);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
 
   return (
     <main>
@@ -15,8 +27,9 @@ function App() {
 
       <div>
         <h2>Obtener un consejo aleatorio</h2>
-        <button>Obtener</button>
-        <p className="result-box"></p>
+        <button onClick={handleGetAdvice}>Obtener</button>
+        
+        <p className="result-box">{advice}</p>
       </div>
 
       <div>
