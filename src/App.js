@@ -19,6 +19,10 @@ function App() {
       });
   }
 
+  useEffect(() => {
+    handleGetAdvice();
+  }, []);
+
   return (
     <main>
 
