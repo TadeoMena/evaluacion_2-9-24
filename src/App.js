@@ -2,9 +2,9 @@ import './App.css';
 import { useState, useEffect } from 'react';
 
 function App() {
-
-  const [term, setTerm] = useState("")
-  const [advice, setAdvice] = useState("")
+  const [term, setTerm] = useState("");
+  const [advice, setAdvice] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const handleTermChange = (event) => setTerm(event.target.value);
 
@@ -17,7 +17,18 @@ function App() {
       .catch(error => {
         console.error(error);
       });
-  }
+  };
+
+  const handleSearch = () => {
+    fetch(`https://api.adviceslip.com/advice/search/${term}`)
+      .then(response => response.json())
+      .then(data => {
+        setSearchResults(data.slips);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   useEffect(() => {
     handleGetAdvice();
@@ -39,9 +50,13 @@ function App() {
       <div>
         <h2>Buscar un consejo</h2>
         <input type="text" onChange={handleTermChange} />
-        <button>Enviar</button>
+        <button onClick={handleSearch}>Enviar</button>
         <h3>Resultados de búsqueda:</h3>
-        <p className="result-box"></p>
+        <ul>
+          {searchResults.map((result, index) => (
+            <li key={index}>{result.advice}</li>
+          ))}
+        </ul>
       </div>
 
     </main>
